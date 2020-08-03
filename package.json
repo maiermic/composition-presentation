@@ -1,0 +1,24 @@
+{
+  "name": "composition-presentation",
+  "version": "1.0.0",
+  "description": "Presentation about composition",
+  "homepage": "https://maiermic.github.io/composition-presentation/",
+  "scripts": {
+    "build": "reveal-md src/presentation.md --static dist",
+    "predeploy": "yarn run build",
+    "deploy": "NODE_DEBUG=gh-pages gh-pages -d dist",
+    "create-pdf": "reveal-md src/presentation.md --theme black --print composition-presentation.pdf",
+    "start": "reveal-md src/presentation.md",
+    "watch": "cd src && reveal-md presentation.md -w"
+  },
+  "author": "Michael Maier",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/maiermic/composition-presentation"
+  },
+  "devDependencies": {
+    "gh-pages": "^3.1.0",
+    "reveal-md": "^4.1.2"
+  },
+  "license": "MIT"
+}
