@@ -4,12 +4,18 @@
   "description": "Presentation about composition",
   "homepage": "https://maiermic.github.io/composition-presentation/",
   "scripts": {
-    "build": "reveal-md src/presentation.md --static dist",
+    "prebuild": "rm -rf dist",
+    "build": "yarn run build-presentation && yarn run build-functional-composition",
+    "postbuild": "cp -R src/img dist",
+    "build-presentation": "reveal-md src/presentation.md --static dist",
+    "build-functional-composition": "reveal-md src/functional-composition.md --static dist",
     "predeploy": "yarn run build",
     "deploy": "NODE_DEBUG=gh-pages gh-pages -d dist",
     "create-pdf": "reveal-md src/presentation.md --theme black --print composition-presentation.pdf",
+    "create-functional-composition-pdf": "reveal-md src/functional-composition.md --theme black --print functional-composition-presentation.pdf",
     "start": "reveal-md src/presentation.md",
-    "watch": "cd src && reveal-md presentation.md -w"
+    "watch": "cd src && reveal-md presentation.md -w",
+    "watch-functional-composition": "cd src && reveal-md functional-composition.md -w"
   },
   "author": "Michael Maier",
   "repository": {
