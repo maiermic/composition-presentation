@@ -13,9 +13,12 @@
   <body>
     <div class="reveal">
       <div class="slides"><section  data-markdown><script type="text/template"><style>
-footer {
+footer, .footer {
   font-size: 50%;
   color: gray;
+}
+strong {
+  color: #d67500;
 }
 .reveal pre code {
   max-height: 80%;
@@ -40,8 +43,9 @@ footer {
 
 ![](https://media.giphy.com/media/3oEdv37iUqkLHDbGg0/giphy.gif) <!-- .element: class="lego-cropped" -->
 
+<!-- How to combine functionality in a flexible and understandable way? -->
 &shy;<!-- .element: class="fragment" -->
-How to combine functionality in a flexible and understandable way?
+Part I: Building blocks in software development
 
 <aside class="notes"><ul>
 <li>lateinisch <em>compositio</em> &quot;Zusammenstellung, Zusammensetzung&quot;</li>
@@ -53,7 +57,56 @@ How to combine functionality in a flexible and understandable way?
 </ul>
 </li>
 </ul>
-</aside></script></section><section ><section data-markdown><script type="text/template">
+</aside></script></section><section  data-markdown><script type="text/template">
+## Question
+
+&shy;<!-- .element: class="fragment" -->
+How does a computer work?
+
+<aside class="notes"><ul>
+<li>Stichwort CPU</li>
+<li>Register/Memory</li>
+<li>Operationen/instructions</li>
+</ul>
+</aside></script></section><section  data-markdown><script type="text/template">
+## Kinds of building blocks
+</script></section><section ><section data-markdown><script type="text/template">
+### Instructions
+
+> CPU \[...\] executes instructions that make up a computer program.
+> The CPU performs basic arithmetic, logic, controlling, and input/output (I/O)
+> operations specified by the instructions in the program.
+</script></section><section data-markdown><script type="text/template">
+### Memory
+</script></section><section data-markdown><script type="text/template">
+#### Questions
+</script></section><section data-markdown><script type="text/template">
+#### What is a **Bit**?
+> Kleinste **unterscheidbare** Informationseinheit
+<!-- .element: class="fragment" -->
+
+#### What is a **Byte**?
+> Kleinste **adressierbare** Informationseinheit
+<!-- .element: class="fragment" -->
+</script></section><section data-markdown><script type="text/template">
+#### What is a **Word**?
+> **Operand:** Smallest information unit used in operations
+<!-- .element: class="fragment" data-fragment-index="1" -->
+
+#### What is a **Register**?
+> High speed storage area in the CPU (usually word sized).
+> All data must be stored in a register before it can be processed.
+<!-- .element: class="fragment" data-fragment-index="2" -->
+
+<aside class="notes"><ul>
+<li><a href="https://en.wikipedia.org/wiki/Word_(computer_architecture)">Word (computer architecture)</a></li>
+<li><a href="https://www.computerscience.gcse.guru/glossary/register">Register</a></li>
+</ul>
+</aside></script></section></section><section ><section data-markdown><script type="text/template">
+## Assembly
+</script></section><section data-markdown><script type="text/template">
+[ASM vs. C](https://www.quora.com/What-is-the-difference-between-assembly-language-and-C-language#:~:text=In%20assembly%20language%20you%20write,is%20a%20high%20level%20language.)
+</script></section></section><section ><section data-markdown><script type="text/template">
 ## Terms
 </script></section><section data-markdown><script type="text/template">
 ### State
@@ -149,13 +202,17 @@ Aufwand oder Kosten eines Algorithmus</li>
 ### Class Based Inheritance
 </script></section><section  data-markdown><script type="text/template">
 ### Diamond Problem
-</script></section><section  data-markdown><script type="text/template">
+</script></section><section ><section data-markdown><script type="text/template">
 ### Mixin Based Inheritance
 
 > Und wegen des Fehlens geeigneter Kompositionsoperatoren, welche dabei helfen, Namenskonflikte zwischen miteinander konkurrierenden Methoden zu lösen, erfolgt Mixin-Komposition immer geradlinig in geordeter Reihenfolge.
 
 http://peterseliger.blogspot.com/2014/06/die-vielen-talente-von-javascript.html#mixins
-</script></section><section  data-markdown><script type="text/template">
+</script></section><section data-markdown><script type="text/template">
+#### Sass Mixins
+
+https://sass-lang.com/documentation/at-rules/mixin
+</script></section></section><section  data-markdown><script type="text/template">
 ### Trait Based Inheritance
 
 http://peterseliger.blogspot.com/2014/06/die-vielen-talente-von-javascript.html#traits
@@ -236,9 +293,88 @@ Your code is inspiring
 >  Like traits, talents can be flattened, either by incorporating the talent into an existing class, or by introducing a new class with the new methods. However, flattening is purely static and results in the loss of the dynamic description of the talent on the object. Flattening is not mandatory, on the contrary, it is just a convenience feature which shows how traits are a subset of talents.
 </script></section><section  data-markdown><script type="text/template">
 ## Composition in Angular
- 
+
 ### Directive
-### Decorator?
+### Pipe
+### Decorator? Eigentlich TypeScript bzw. JavaScript
+[Use decorator to beat ngOnChanges – Decoupling ngOnChanges | Kern Zhao](https://www.youtube.com/watch?v=rVDMmlCRvkg&ab_channel=ng-conf)
+[Example](https://stackblitz.com/github/zhaosiyang/property-watch-decorator-example?file=src%2Fapp%2Fchild%2Fchild.component.ts)
+
+### Composable Components (smart vs. dumb)
+[Article](https://medium.com/@jtomaszewski/how-to-write-good-composable-and-pure-components-in-angular-2-1756945c0f5b)
+
+Bei DSA sollte man Dialog und Komponente in 2 Komponenten teilen (siehe z.B. `ResolveAbsenceCardComponent`)
+
+
+Bausteine
+Aus einem Guss (z.B. Stuhl) vs. Zusammengebaut aus mehreren Teilen/Komponenten
+Lego vs. Playmobil
+Anleitung: DINA3 vs Buch
+    - DINA3
+        - eine Seite
+        - ein Stück/Teil
+        - Sprache: Jedes Wort/Satz nebeneinander in unterschiedlichen Sprachen
+            - schlechter zu lesen (eigene Sprache muss bei jedem Wort/Satz gesucht werden)
+            - schlechter zu erweitern
+                - Sprache hinzufügen => komplettes Layout überarbeiten
+                - Satz ergänzen => komplettes Layout überarbeiten
+        - leichter in der Herstellung
+    - Buch
+        - mehrere Seiten
+        - Buchdeckel
+        - für jede Sprache ein Abschnitt (jeder gleich aufgebaut)
+            - besser zu lesen
+                - Abschnitte nach Sprache getrennt (einmalige Suche nach eigener Sprache)
+                - Inhaltsverzeichnis (auf welcher Seite ist was zu finden)
+            - besser zu erweitern
+                - Sprache hinzufügen
+                    - neuen Abschnitt (gleich aufgebaut wie bisherige) hinzufügen
+                    - bestehende Abschnitte bleiben unverändert
+                    - Inhaltsverzeichnis ergänzen
+                - Satz ergänzen
+                    - Layout für Abschnitt überarbeiten
+                    - komplettes Layout muss **nicht** überarbeitet werden
+        - komplexer in der Herstellung
+            - Teile müssen zusammengebaut werden
+            - Seiten müssen z.B. mit Buchdeckel gebunden werden
+
+Alle Komponenten fest verbaut vs Anschlussmöglichkeiten (Dockingstation)
+    - Ghettoblaster vs. Stereoanlage
+
+[The Power Of Composition - Folien](https://www.slideshare.net/ScottWlaschin/the-power-of-composition)
+
+The philosophy of composition:
+- connectable
+- no adapters
+- reusable parts
+
+- immutable data 
+- self contained
+    - no side-effects, no I/O, no globals, etc
+
+# [The Power of Composition - Scott Wlaschin](https://youtu.be/vDe-4o8Uwl8)
+- gute Motivation
+- passende Bilder zur Veranschaulichung (Lego, Modell-Eisenbahn)
+- only functional- and type-composition (mainly functional)
+    
+[Lego Philosophy](https://youtu.be/vDe-4o8Uwl8?t=321)
+1. All pieces are designed to be connected
+2. Connect two pieces together and get another "piece"
+   that can still be connected
+3. The pieces are reusable in many contexts
+
+> Bloch talks about some of the "mistakes" that were made in the initial
+> implementation and how they have worked at trying to fix them.
+
+Zitat von https://stackoverflow.com/a/568041/1065654
+See book Effective Java
+
+
+
+Entwicklung von Bibliotheken:
+- Java Stream API
+- C++ Ranges
+- RxJS pipe
 </script></section></div>
     </div>
 
