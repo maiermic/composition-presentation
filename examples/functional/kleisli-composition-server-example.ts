@@ -154,19 +154,19 @@ function printAssert(actual, expected, message = '') {
 }
 
 function testApp(app: WebPart) {
-  printAssert(app3(requestGetHello), {
+  printAssert(app(requestGetHello), {
     request: { method: 'GET', path: '/hello' },
     response: { status: 200, body: 'Hello' },
   })
-  printAssert(app3(requestPostHello), {
+  printAssert(app(requestPostHello), {
     request: { method: 'POST', path: '/hello' },
     response: { status: 200, body: 'Hello POST' },
   })
-  printAssert(app3(requestGetGodbye), {
+  printAssert(app(requestGetGodbye), {
     request: { method: 'GET', path: '/goodbye' },
     response: { status: 200, body: 'Goodbye' },
   })
-  printAssert(app3(requestPostGodbye), {
+  printAssert(app(requestPostGodbye), {
     request: { method: 'POST', path: '/goodbye' },
     response: { status: 200, body: 'Goodbye POST' },
   })
