@@ -24,6 +24,7 @@ function sleep(seconds): Task<number, never> {
 //   return callbacks => f(callbacks.resolve, callbacks.reject)
 // }
 
+// Monad `bind` definition
 const bindTask = f => task => ({ resolve, reject }) =>
   task({
     resolve: result => f(result)({ resolve, reject }),
@@ -57,6 +58,22 @@ pipe(
   bindTask(x => ({ resolve, reject }) => resolve(x * 2)),
   catchError(error => ({ resolve, reject }) => resolve(0)),
   bindTask(x => ({ resolve, reject }) => resolve(x + 100)),
+)(sleep(1))({
+  resolve: x => console.log(`task finished with result ${x}`),
+  reject: e => console.log(`task finished with error ${e}`),
+})
+
+// Monad `return` definition (success case)
+const resolveTask = x => ({ resolve, reject }) => resolve(x)
+// Monad `fail` definition
+const rejectTask = e => ({ resolve, reject }) => reject(e)
+
+pipe(
+  bindTask(x => resolveTask(x + 10)),
+  bindTask(x => rejectTask('some error')),
+  bindTask(x => resolveTask(x * 2)),
+  catchError(error => resolveTask(0)),
+  bindTask(x => resolveTask(x + 100)),
 )(sleep(1))({
   resolve: x => console.log(`task finished with result ${x}`),
   reject: e => console.log(`task finished with error ${e}`),
