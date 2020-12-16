@@ -1,8 +1,4 @@
-// Force file to be treated like a module to avoid redeclaration-conflicts
-// with other files, see: https://stackoverflow.com/a/41300413/1065654
-export let undefined
-
-const pipe = (...fns) => x => fns.reduce((res, f) => f(res), x)
+import { pipe } from './pipe'
 
 const isNullOrUndefined = x => x === null || typeof x === 'undefined'
 const bindMaybe = f => m => (isNullOrUndefined(m) ? m : f(m))

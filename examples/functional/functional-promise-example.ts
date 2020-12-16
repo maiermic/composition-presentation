@@ -1,11 +1,4 @@
-// Force file to be treated like a module to avoid redeclaration-conflicts
-// with other files, see: https://stackoverflow.com/a/41300413/1065654
-export let undefined
-
-// const pipe = (g, f) => x => f(g(x))
-function pipe(...fns) {
-  return x => fns.reduce((res, f) => f(res), x)
-}
+import { pipe } from './pipe'
 
 type Task<R, E> = (callbacks: {
   resolve: (result: R) => void
