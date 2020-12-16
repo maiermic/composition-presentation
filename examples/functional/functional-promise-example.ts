@@ -17,13 +17,6 @@ function sleep(seconds): Task<number, never> {
     setTimeout(() => resolve(seconds), seconds * 1000)
 }
 
-// function future<R, E>(
-//   f: (resolve: (result: R) => void,
-//       reject: (error: E) => void) => Task<R, E>
-// ): Task<R, E> {
-//   return callbacks => f(callbacks.resolve, callbacks.reject)
-// }
-
 // Monad `bind` definition
 const bindTask = f => task => ({ resolve, reject }) =>
   task({
