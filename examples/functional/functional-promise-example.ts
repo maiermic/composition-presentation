@@ -62,15 +62,29 @@ const taskExamplePipe = pipe(
   bindTask(x => ({ resolve, reject }) => resolve(x + 100)),
 )
 
-taskExamplePipe(sleep(1))({
-  resolve: x => console.log(`task finished with result ${x}`),
-  reject: e => console.log(`task finished with error ${e}`),
+// Create task (not immediately called on creation in contrast to Promise)
+const exampleTask = taskExamplePipe(sleep(1))
+// Run task (call with callbacks)
+exampleTask({
+  resolve: x => console.log(`1. task example finished with result ${x}`),
+  reject: e => console.log(`1. task example finished with error ${e}`),
 })
 
 // Helper similar to `Promise.resolve`
 const resolveTask = x => ({ resolve, reject }) => resolve(x)
 // Helper similar to `Promise.reject`
 const rejectTask = e => ({ resolve, reject }) => reject(e)
+// Helper to run task (call with callbacks)
+const runTask = task =>
+  task({
+    resolve: _ => _,
+    reject: e => console.error(`unhandled error "${e}" in task`),
+  })
+// Helper to run side-effect (e.g. logging)
+const tapTask = f => x => {
+  f(x) // side-effect
+  return resolveTask(x)
+}
 
 // Example with helpers
 const taskExample2Pipe = pipe(
@@ -79,12 +93,13 @@ const taskExample2Pipe = pipe(
   bindTask(x => resolveTask(x * 2)),
   catchError(error => resolveTask(0)),
   bindTask(x => resolveTask(x + 100)),
+  bindTask(
+    tapTask(x => console.log(`2. task example finished with result ${x}`)),
+  ),
 )
 
-taskExample2Pipe(sleep(1))({
-  resolve: x => console.log(`task finished with result ${x}`),
-  reject: e => console.log(`task finished with error ${e}`),
-})
+const example2Task = taskExample2Pipe(sleep(1))
+runTask(example2Task)
 
 // ---------------
 // Regular Promise
