@@ -21,9 +21,6 @@ export function pipe<T1, T2, T3, T4, T5, R>(
 export function pipe<T1, T2, T3, T4, T5, T6, R>(
   ...fns: Pipe6<T1, T2, T3, T4, T5, T6, R>
 ): F<T1, R>
-export function pipe<T1, R>(...fns: [T1, ...any, R]): F<T1, R>
-export function pipe<T>(...fns: []): F<T, T>
-export function pipe<T>(...fns: any[]): F<T, T>
 export function pipe(...fns) {
   return x => fns.reduce((res, f) => f(res), x)
 }
