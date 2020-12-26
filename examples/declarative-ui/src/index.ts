@@ -20,4 +20,9 @@ const createVApp = (count: number) =>
 let count = 0
 const vApp = createVApp(count)
 const $app = render(vApp)
-mount($app, document.getElementById('app'))
+let $rootEl = mount($app, document.getElementById('app'))
+
+setInterval(() => {
+  count++
+  $rootEl = mount(render(createVApp(count)), $rootEl)
+}, 1000)
