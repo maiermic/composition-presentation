@@ -13,7 +13,7 @@ export function createElement(
     attrs?: VirtualElement['attrs']
     children?: VirtualElement['children']
   } = {},
-) {
+): VirtualElement {
   return { tagName, attrs, children }
 }
 
