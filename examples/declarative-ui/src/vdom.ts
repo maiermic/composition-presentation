@@ -39,6 +39,11 @@ function renderElem({ tagName, attrs, children }: VirtualElement): HTMLElement {
   return $el
 }
 
+export function render(vNode: VirtualElement): HTMLElement
+export function render(vNode: string): Text
+// https://github.com/microsoft/TypeScript/issues/14107
+// Support overload resolution with type union arguments
+export function render(vNode: VirtualNode): HTMLElement | Text
 export function render(vNode: VirtualNode): HTMLElement | Text {
   if (typeof vNode === 'string') {
     return document.createTextNode(vNode)
