@@ -1,4 +1,4 @@
-import { createElement, render } from './vdom'
+import { createElement, mount, render } from './vdom'
 
 const vApp = createElement('div', {
   attrs: {
@@ -14,5 +14,5 @@ const vApp = createElement('div', {
   ],
 }) // represents ElementNode
 
-const $app = render(vApp)
-console.log($app)
+const $app: HTMLElement = render(vApp)
+mount($app, document.getElementById('app'))

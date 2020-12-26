@@ -52,3 +52,8 @@ export function render(vNode: VirtualNode): HTMLElement | Text {
   // we assume everything else to be a virtual element
   return renderElem(vNode)
 }
+
+export function mount($node: HTMLElement, $target: HTMLElement): HTMLElement {
+  $target.replaceWith($node)
+  return $node
+}
