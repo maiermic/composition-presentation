@@ -1,4 +1,4 @@
-import { createElement, mount, render } from './vdom'
+import { createElement, diff, mount, render } from './vdom'
 
 const createVApp = (count: number) =>
   createElement('div', {
@@ -18,11 +18,18 @@ const createVApp = (count: number) =>
   })
 
 let count = 0
-const vApp = createVApp(count)
+let vApp = createVApp(count)
 const $app = render(vApp)
-let $rootEl = mount($app, document.getElementById('app'))
+let $rootEl: HTMLElement | Text = mount($app, document.getElementById('app'))
 
 setInterval(() => {
   count++
-  $rootEl = mount(render(createVApp(count)), $rootEl)
+  const vNewApp = createVApp(count)
+  const patch = diff(vApp, vNewApp)
+
+  // we might replace the whole $rootEl,
+  // so we want the patch will return the new $rootEl
+  $rootEl = patch($rootEl as HTMLElement)
+
+  vApp = vNewApp
 }, 1000)
