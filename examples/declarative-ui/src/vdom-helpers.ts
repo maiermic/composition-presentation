@@ -7,5 +7,10 @@ export function createElementHelper(tagName: string) {
   ) => createElement(tagName, { attrs, children })
 }
 
+export const button = createElementHelper('button')
 export const div = createElementHelper('div')
+export const form = createElementHelper('form')
 export const img = createElementHelper('img')
+export const input = createElementHelper('input')
+export const li = createElementHelper('li')
+export const ul = createElementHelper('ul')
