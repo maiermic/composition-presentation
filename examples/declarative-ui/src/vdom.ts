@@ -4,7 +4,9 @@ export type VirtualNode = VirtualElement | string
 
 export interface VirtualElement {
   tagName: string
-  attrs: { [key in string]: string | EventListenerOrEventListenerObject }
+  attrs: {
+    [key in string]: string | boolean | EventListenerOrEventListenerObject
+  }
   children: VirtualNode[]
 }
 
@@ -42,6 +44,14 @@ function renderElem({ tagName, attrs, children }: VirtualElement): HTMLElement {
   for (const [k, v] of Object.entries(attrs)) {
     if (typeof v === 'string') {
       $el.setAttribute(k, v)
+    } else if (typeof v === 'boolean') {
+      if (v) {
+        // e.g. input({checked: true}) -> <input checked>
+        $el.setAttribute(k, '')
+      } else {
+        // e.g. input({checked: false}) -> <input>
+        $el.removeAttribute(k)
+      }
     } else {
       console.debug('renderElem addEventListener', $el, k, v)
       $el.addEventListener(attributeNameToEventName(k), v)
@@ -140,7 +150,19 @@ function diffAttrs(
   for (const [k, v] of Object.entries(newAttrs)) {
     patches.push($node => {
       if (typeof v === 'string') {
-        $node.setAttribute(k, v)
+        if (k === 'value' && $node instanceof HTMLInputElement) {
+          $node.value = v
+        } else {
+          $node.setAttribute(k, v)
+        }
+      } else if (typeof v === 'boolean') {
+        if (v) {
+          // e.g. input({checked: true}) -> <input checked>
+          $node.setAttribute(k, '')
+        } else {
+          // e.g. input({checked: false}) -> <input>
+          $node.removeAttribute(k)
+        }
       } else {
         // TODO event listeners may not be added multiple times
         // $node.addEventListener(attributeNameToEventName(k), v)
