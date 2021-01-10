@@ -1,3 +1,5 @@
+import { zip } from './zip'
+
 export type VirtualNode = VirtualElement | string
 
 export interface VirtualElement {
@@ -190,9 +192,9 @@ function diffChildren(
   return $parent => {
     // since childPatches are expecting the $child, not $parent,
     // we cannot just loop through them and call patch($parent)
-    $parent.childNodes.forEach(($child, i) => {
-      childPatches[i]($child as HTMLElement)
-    })
+    for (const [patch, $child] of zip(childPatches, $parent.childNodes)) {
+      patch($child as HTMLElement)
+    }
 
     for (const patch of additionalPatches) {
       patch($parent)
