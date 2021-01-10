@@ -2,7 +2,7 @@ export type VirtualNode = VirtualElement | string
 
 export interface VirtualElement {
   tagName: string
-  attrs: { [key in string]: string }
+  attrs: { [key in string]: string | EventListenerOrEventListenerObject }
   children: VirtualNode[]
 }
 
@@ -19,6 +19,17 @@ export function createElement(
   return { tagName, attrs, children }
 }
 
+/**
+ * E.g. converts `onClick` to `click`
+ * @param attributeName
+ */
+function attributeNameToEventName(attributeName: string) {
+  if (!attributeName.startsWith('on')) {
+    throw Error(`attribute name "${attributeName}" is missing prefix "on"`)
+  }
+  return attributeName[2].toLowerCase() + attributeName.slice(3)
+}
+
 function renderElem({ tagName, attrs, children }: VirtualElement): HTMLElement {
   // create the element
   //   e.g. <div></div>
@@ -27,7 +38,12 @@ function renderElem({ tagName, attrs, children }: VirtualElement): HTMLElement {
   // add all attributs as specified in vNode.attrs
   //   e.g. <div id="app"></div>
   for (const [k, v] of Object.entries(attrs)) {
-    $el.setAttribute(k, v)
+    if (typeof v === 'string') {
+      $el.setAttribute(k, v)
+    } else {
+      console.debug('renderElem addEventListener', $el, k, v)
+      $el.addEventListener(attributeNameToEventName(k), v)
+    }
   }
 
   // append all children as specified in vNode.children
@@ -121,7 +137,12 @@ function diffAttrs(
   // setting newAttrs
   for (const [k, v] of Object.entries(newAttrs)) {
     patches.push($node => {
-      $node.setAttribute(k, v)
+      if (typeof v === 'string') {
+        $node.setAttribute(k, v)
+      } else {
+        // TODO event listeners may not be added multiple times
+        // $node.addEventListener(attributeNameToEventName(k), v)
+      }
       return $node
     })
   }
@@ -130,7 +151,12 @@ function diffAttrs(
   for (const k in oldAttrs) {
     if (!(k in newAttrs)) {
       patches.push($node => {
-        $node.removeAttribute(k)
+        if (k.startsWith('on')) {
+          // TODO remove event listener (not known here)
+          throw Error(`Removing event listeners not implemented yet: ${k}`)
+        } else {
+          $node.removeAttribute(k)
+        }
         return $node
       })
     }
