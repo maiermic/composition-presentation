@@ -1,21 +1,14 @@
-import { createElement, diff, mount, render } from './vdom'
+import { diff, mount, render } from './vdom'
+import { div, img } from './vdom-helpers'
 
 const createVApp = (count: number) =>
-  createElement('div', {
-    attrs: {
-      id: 'app',
-      dataCount: String(count), // we use the count here
-    },
-    children: [
-      'The current count is: ',
-      String(count), // and here
-      createElement('img', {
-        attrs: {
-          src: 'https://media.giphy.com/media/cuPm4p4pClZVC/giphy.gif',
-        },
-      }),
-    ],
-  })
+  div({ id: 'app', dataCount: String(count) }, [
+    'The current count is: ',
+    String(count),
+    img({
+      src: 'https://media.giphy.com/media/cuPm4p4pClZVC/giphy.gif',
+    }),
+  ])
 
 let count = 0
 let vApp = createVApp(count)
