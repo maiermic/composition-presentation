@@ -14,13 +14,18 @@ class State {
     rerender()
   }
 
+  removeTodo = (index: number): void => {
+    this.todos.splice(index, 1)
+    rerender()
+  }
+
   setText = (text: string): void => {
     this.text = text
     rerender()
   }
 }
 
-const createVApp = ({ text, addTodo, setText, todos }: State) =>
+const createVApp = ({ text, addTodo, removeTodo, setText, todos }: State) =>
   form(
     {
       onSubmit(_event: Event) {
@@ -41,7 +46,19 @@ const createVApp = ({ text, addTodo, setText, todos }: State) =>
       button({ type: 'submit' }, ['Add']),
       ul(
         {},
-        todos.map(({ text }: Todo) => li({}, [text])),
+        todos.map(({ text }: Todo, index) =>
+          li({}, [
+            text,
+            input({
+              type: 'button',
+              value: 'X',
+              onClick(_event: Event) {
+                console.debug('remove TODO', index)
+                removeTodo(index)
+              },
+            }),
+          ]),
+        ),
       ),
     ],
   )
