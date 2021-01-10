@@ -1,10 +1,35 @@
 import { createElement, VirtualElement } from './vdom'
 
 export function createElementHelper(tagName: string) {
-  return (
-    attrs: VirtualElement['attrs'] = {},
-    children: VirtualElement['children'] = [],
-  ) => createElement(tagName, { attrs, children })
+  function createHelper(attrs: VirtualElement['attrs']): VirtualElement
+  function createHelper(children: VirtualElement['children']): VirtualElement
+  function createHelper(child: string): VirtualElement
+  function createHelper(
+    attrs: VirtualElement['attrs'],
+    children: VirtualElement['children'] | string,
+  ): VirtualElement
+  function createHelper(...args: any[]): VirtualElement {
+    if (args.length > 1) {
+      const [attrs, children] = args
+      return createElement(tagName, {
+        attrs,
+        children: typeof children === 'string' ? [children] : children,
+      })
+    }
+    const arg = args[0]
+    if (Array.isArray(arg)) {
+      return createElement(tagName, { children: arg })
+    }
+    if (typeof arg === 'string') {
+      return createElement(tagName, { children: [arg] })
+    }
+    if (typeof arg === 'object') {
+      return createElement(tagName, { attrs: arg })
+    }
+    throw Error(`Unexpected argument ${arg} of type ${typeof arg}`)
+  }
+
+  return createHelper
 }
 
 export const a = createElementHelper('a')
