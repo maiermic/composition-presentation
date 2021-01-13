@@ -15,6 +15,7 @@ import {
 } from './vdom-helpers'
 
 interface Todo {
+  isEdited: boolean
   text: string
   completed: boolean
 }
@@ -53,7 +54,7 @@ class State {
   }
 
   addTodo = (): void => {
-    const todo = { text: this.text, completed: false }
+    const todo: Todo = { text: this.text, completed: false, isEdited: false }
     this.todos.push(todo)
     if (this.filterCriteria !== TodoFilterCriteria.COMPLETED) {
       this.filteredTodos.push(todo)
@@ -119,6 +120,21 @@ class State {
     }
     this.onStateChanged()
   }
+
+  startEditingTodo(index: number) {
+    this.filteredTodos[index].isEdited = true
+    this.onStateChanged()
+  }
+
+  stopEditingTodo(index: number) {
+    this.filteredTodos[index].isEdited = false
+    this.onStateChanged()
+  }
+
+  editTodoText(index: number, text: string) {
+    this.filteredTodos[index].text = text
+    this.onStateChanged()
+  }
 }
 
 function FilterLink(state: {
@@ -162,27 +178,61 @@ const createVApp = (state: State) =>
       ul(
         { class: 'todo-list' },
         state.filteredTodos.map((todo: Todo, index) =>
-          li({ class: todo.completed ? 'completed' : '' }, [
-            div({ class: 'view' }, [
+          li(
+            {
+              class: [
+                todo.completed ? 'completed' : '',
+                todo.isEdited ? 'editing' : '',
+              ]
+                .join(' ')
+                .trim(),
+            },
+            [
+              div({ class: 'view' }, [
+                input({
+                  class: 'toggle',
+                  type: 'checkbox',
+                  checked: todo.completed,
+                  onClick(_event: Event) {
+                    state.toggleTodo(index)
+                  },
+                }),
+                label(
+                  {
+                    onDblclick(_event: Event) {
+                      state.startEditingTodo(index)
+                    },
+                  },
+                  todo.text,
+                ),
+                button({
+                  class: 'destroy',
+                  onClick(_event: Event) {
+                    console.debug('remove TODO', index)
+                    state.removeTodo(index)
+                  },
+                }),
+              ]),
               input({
-                class: 'toggle',
-                type: 'checkbox',
-                checked: todo.completed,
-                onClick(_event: Event) {
-                  state.toggleTodo(index)
+                class: 'edit',
+                value: todo.text,
+                onBlur(event: FocusEvent) {
+                  const inputText = (event.target as HTMLInputElement).value
+                  state.editTodoText(index, inputText)
+                  state.stopEditingTodo(index)
+                },
+                onKeyup(event: KeyboardEvent) {
+                  if (event.key === 'Enter') {
+                    const inputText = (event.target as HTMLInputElement).value
+                    state.editTodoText(index, inputText)
+                    state.stopEditingTodo(index)
+                  } else if (event.key === 'Escape') {
+                    state.stopEditingTodo(index)
+                  }
                 },
               }),
-              label(todo.text),
-              button({
-                class: 'destroy',
-                onClick(_event: Event) {
-                  console.debug('remove TODO', index)
-                  state.removeTodo(index)
-                },
-              }),
-            ]),
-            input({ class: 'edit', value: 'Rule the web' }),
-          ]),
+            ],
+          ),
         ),
       ),
       footer({ class: 'footer' }, [
