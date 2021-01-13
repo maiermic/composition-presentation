@@ -32,6 +32,26 @@ class State {
   filteredTodos: Todo[] = []
   leftTodosCount = 0
 
+  constructor(private localStorageKey: string) {
+    this.loadStateFromLocalStorage()
+  }
+
+  private loadStateFromLocalStorage() {
+    const serializedState = window.localStorage.getItem(this.localStorageKey)
+    if (serializedState) {
+      Object.assign(this, JSON.parse(serializedState))
+    }
+  }
+
+  private updateLocalStorage() {
+    window.localStorage.setItem(this.localStorageKey, JSON.stringify(this))
+  }
+
+  onStateChanged() {
+    rerender()
+    this.updateLocalStorage()
+  }
+
   addTodo = (): void => {
     const todo = { text: this.text, completed: false }
     this.todos.push(todo)
@@ -39,7 +59,7 @@ class State {
       this.filteredTodos.push(todo)
     }
     this.leftTodosCount++
-    rerender()
+    this.onStateChanged()
   }
 
   removeTodo = (index: number): void => {
@@ -48,7 +68,7 @@ class State {
     if (!deletedTodo.completed) {
       this.leftTodosCount--
     }
-    rerender()
+    this.onStateChanged()
   }
 
   toggleTodo = (index: number): void => {
@@ -62,7 +82,7 @@ class State {
     ) {
       this.filteredTodos.splice(index, 1)
     }
-    rerender()
+    this.onStateChanged()
   }
 
   clearCompletedTodos() {
@@ -71,12 +91,12 @@ class State {
       this.filteredTodos = []
     }
     this.leftTodosCount = this.todos.length
-    rerender()
+    this.onStateChanged()
   }
 
   setText = (text: string): void => {
     this.text = text
-    rerender()
+    this.onStateChanged()
   }
 
   setFilterCriteria(filterCriteria: TodoFilterCriteria) {
@@ -97,7 +117,7 @@ class State {
       default:
         console.warn('unhandled filter criteria', filterCriteria)
     }
-    rerender()
+    this.onStateChanged()
   }
 }
 
@@ -206,7 +226,7 @@ const createVApp = (state: State) =>
     ]),
   ])
 
-const state: State = new State()
+const state: State = new State('todo-list')
 let vApp = createVApp(state)
 const $app = render(vApp)
 let $rootEl: HTMLElement | Text = mount($app, document.getElementById('app'))
