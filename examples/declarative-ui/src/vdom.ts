@@ -150,13 +150,19 @@ function diffAttrs(
   for (const [k, v] of Object.entries(newAttrs)) {
     patches.push($node => {
       if (typeof v === 'string') {
-        if (k === 'value' && $node instanceof HTMLInputElement) {
-          $node.value = v
+        // check if key refers to a property instead of an attribute
+        if (k in $node) {
+          // @ts-ignore
+          $node[k] = v
         } else {
           $node.setAttribute(k, v)
         }
       } else if (typeof v === 'boolean') {
-        if (v) {
+        // check if key refers to a property instead of an attribute
+        if (k in $node) {
+          // @ts-ignore
+          $node[k] = v
+        } else if (v) {
           // e.g. input({checked: true}) -> <input checked>
           $node.setAttribute(k, '')
         } else {
