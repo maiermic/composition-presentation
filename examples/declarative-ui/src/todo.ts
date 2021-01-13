@@ -19,19 +19,32 @@ interface Todo {
   completed: boolean
 }
 
+enum TodoFilterCriteria {
+  ALL = 'all',
+  ACTIVE = 'active',
+  COMPLETED = 'completed',
+}
+
 class State {
   text: string = ''
   todos: Todo[] = []
+  filterCriteria: TodoFilterCriteria = TodoFilterCriteria.ALL
+  filteredTodos: Todo[] = []
   leftTodosCount = 0
 
   addTodo = (): void => {
-    this.todos.push({ text: this.text, completed: false })
+    const todo = { text: this.text, completed: false }
+    this.todos.push(todo)
+    if (this.filterCriteria !== TodoFilterCriteria.COMPLETED) {
+      this.filteredTodos.push(todo)
+    }
     this.leftTodosCount++
     rerender()
   }
 
   removeTodo = (index: number): void => {
-    const [deletedTodo] = this.todos.splice(index, 1)
+    const [deletedTodo] = this.filteredTodos.splice(index, 1)
+    this.todos.splice(this.todos.indexOf(deletedTodo), 1)
     if (!deletedTodo.completed) {
       this.leftTodosCount--
     }
@@ -39,21 +52,51 @@ class State {
   }
 
   toggleTodo = (index: number): void => {
-    const todo = this.todos[index]
+    const todo = this.filteredTodos[index]
     todo.completed = !todo.completed
     this.leftTodosCount += todo.completed ? -1 : 1
+    if (
+      (!todo.completed &&
+        this.filterCriteria === TodoFilterCriteria.COMPLETED) ||
+      (todo.completed && this.filterCriteria === TodoFilterCriteria.ACTIVE)
+    ) {
+      this.filteredTodos.splice(index, 1)
+    }
     rerender()
   }
 
   clearCompletedTodos() {
-    console.log('clearCompletedTodos')
     this.todos = this.todos.filter(todo => !todo.completed)
+    if (this.filterCriteria === TodoFilterCriteria.COMPLETED) {
+      this.filteredTodos = []
+    }
     this.leftTodosCount = this.todos.length
     rerender()
   }
 
   setText = (text: string): void => {
     this.text = text
+    rerender()
+  }
+
+  setFilterCriteria(filterCriteria: TodoFilterCriteria) {
+    if (this.filterCriteria === filterCriteria) {
+      return
+    }
+    this.filterCriteria = filterCriteria
+    switch (filterCriteria) {
+      case TodoFilterCriteria.ALL:
+        this.filteredTodos = [...this.todos]
+        break
+      case TodoFilterCriteria.ACTIVE:
+        this.filteredTodos = this.todos.filter(todo => !todo.completed)
+        break
+      case TodoFilterCriteria.COMPLETED:
+        this.filteredTodos = this.todos.filter(todo => todo.completed)
+        break
+      default:
+        console.warn('unhandled filter criteria', filterCriteria)
+    }
     rerender()
   }
 }
@@ -84,7 +127,7 @@ const createVApp = (state: State) =>
       label({ for: 'toggle-all' }, 'Mark all as complete'),
       ul(
         { class: 'todo-list' },
-        state.todos.map((todo: Todo, index) =>
+        state.filteredTodos.map((todo: Todo, index) =>
           li({ class: todo.completed ? 'completed' : '' }, [
             div({ class: 'view' }, [
               input({
@@ -114,9 +157,42 @@ const createVApp = (state: State) =>
           ' item left',
         ]),
         ul({ class: 'filters' }, [
-          li([a({ href: '#/', class: 'selected' }, 'All')]),
-          li([a({ href: '#/active' }, 'Active')]),
-          li([a({ href: '#/completed' }, 'Completed')]),
+          li([
+            a(
+              {
+                href: '#/',
+                class:
+                  state.filterCriteria === TodoFilterCriteria.ALL
+                    ? 'selected'
+                    : '',
+              },
+              'All',
+            ),
+          ]),
+          li([
+            a(
+              {
+                href: '#/active',
+                class:
+                  state.filterCriteria === TodoFilterCriteria.ACTIVE
+                    ? 'selected'
+                    : '',
+              },
+              'Active',
+            ),
+          ]),
+          li([
+            a(
+              {
+                href: '#/completed',
+                class:
+                  state.filterCriteria === TodoFilterCriteria.COMPLETED
+                    ? 'selected'
+                    : '',
+              },
+              'Completed',
+            ),
+          ]),
         ]),
         button(
           {
@@ -146,3 +222,18 @@ function rerender() {
 
   vApp = vNewApp
 }
+
+const updateRoute = () => {
+  switch (document.location.hash) {
+    case '#/active':
+      state.setFilterCriteria(TodoFilterCriteria.ACTIVE)
+      break
+    case '#/completed':
+      state.setFilterCriteria(TodoFilterCriteria.COMPLETED)
+      break
+    default:
+      state.setFilterCriteria(TodoFilterCriteria.ALL)
+  }
+}
+window.addEventListener('load', updateRoute)
+window.addEventListener('hashchange', updateRoute)
