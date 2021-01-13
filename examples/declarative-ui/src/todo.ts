@@ -101,6 +101,20 @@ class State {
   }
 }
 
+function FilterLink(state: {
+  isSelected: boolean
+  text: string
+  href: string
+}) {
+  return a(
+    {
+      href: state.href,
+      class: state.isSelected ? 'selected' : '',
+    },
+    state.text,
+  )
+}
+
 const createVApp = (state: State) =>
   section({ class: 'todoapp' }, [
     header({ class: 'header' }, [
@@ -158,40 +172,25 @@ const createVApp = (state: State) =>
         ]),
         ul({ class: 'filters' }, [
           li([
-            a(
-              {
-                href: '#/',
-                class:
-                  state.filterCriteria === TodoFilterCriteria.ALL
-                    ? 'selected'
-                    : '',
-              },
-              'All',
-            ),
+            FilterLink({
+              text: 'All',
+              href: '#/',
+              isSelected: state.filterCriteria === TodoFilterCriteria.ALL,
+            }),
           ]),
           li([
-            a(
-              {
-                href: '#/active',
-                class:
-                  state.filterCriteria === TodoFilterCriteria.ACTIVE
-                    ? 'selected'
-                    : '',
-              },
-              'Active',
-            ),
+            FilterLink({
+              text: 'Active',
+              href: '#/active',
+              isSelected: state.filterCriteria === TodoFilterCriteria.ACTIVE,
+            }),
           ]),
           li([
-            a(
-              {
-                href: '#/completed',
-                class:
-                  state.filterCriteria === TodoFilterCriteria.COMPLETED
-                    ? 'selected'
-                    : '',
-              },
-              'Completed',
-            ),
+            FilterLink({
+              text: 'Completed',
+              href: '#/completed',
+              isSelected: state.filterCriteria === TodoFilterCriteria.COMPLETED,
+            }),
           ]),
         ]),
         button(
