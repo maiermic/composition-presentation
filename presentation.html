@@ -213,12 +213,32 @@ http://peterseliger.blogspot.com/2014/06/die-vielen-talente-von-javascript.html#
 #### Sass Mixins
 
 https://sass-lang.com/documentation/at-rules/mixin
+</script></section><section data-markdown><script type="text/template">
+#### Dart Mixins
+
+https://dart.dev/guides/language/language-tour#adding-features-to-a-class-mixins
+</script></section><section data-markdown><script type="text/template">
+#### TypeScript Mixin Pattern
+
+https://www.typescriptlang.org/docs/handbook/mixins.html
+</script></section><section data-markdown><script type="text/template">
+#### PHP Traits (actually Mixins 😉)
+
+https://www.typescriptlang.org/docs/handbook/mixins.html
 </script></section></section><section  data-markdown><script type="text/template">
 ### Trait Based Inheritance
 
 http://peterseliger.blogspot.com/2014/06/die-vielen-talente-von-javascript.html#traits
+
+Java Interface Default Implementation
 </script></section><section  data-markdown><script type="text/template">
 ## Composition
+
+> Composition over inheritance
+
+[Mixins Considered Harmful](https://reactjs.org/blog/2016/07/13/mixins-considered-harmful.html)
+[From Mixins to Object Composition](https://raganwald.com/2016/07/20/prefer-composition-to-inheritance.html)
+[Re-use in OO: Inheritance, Composition and Mixins](https://naildrivin5.com/blog/2012/12/19/re-use-in-oo-inheritance.html)
 </script></section><section ><section data-markdown><script type="text/template">
 ### [Object Composition](https://en.wikipedia.org/wiki/Object_composition)
 
@@ -229,6 +249,8 @@ http://peterseliger.blogspot.com/2014/06/die-vielen-talente-von-javascript.html#
 #### Delegation
 
 Built-in syntax in Kotlin
+</script></section><section data-markdown><script type="text/template">
+https://dev.to/riccardo_cardin/template-method-pattern-revised-3od3
 </script></section></section><section ><section data-markdown><script type="text/template">
 ### [Functional Composition](https://en.wikipedia.org/wiki/Function_composition_(computer_science))
 </script></section><section data-markdown><script type="text/template">
@@ -286,13 +308,37 @@ Your code is inspiring
  If you write spaghetti code, your colleagues will likely, too
  <span class="emoji">😉</span>
 </footer>
-</script></section><section  data-markdown><script type="text/template">
-## [Talents: Dynamically Composable Units of Reuse](http://scg.unibe.ch/archive/papers/Ress11a-Talents.pdf)
+</script></section><section ><section data-markdown><script type="text/template">
+## [Talents](http://scg.unibe.ch/archive/papers/Ress11a-Talents.pdf)
+### Dynamically Composable Units of Reuse
 
-> … object-specific units of reuse which model features that an object can acquire at run-time. Like a trait, a talent represents a set of methods that constitute part of the behavior of an object. Unlike traits, talents can be acquired (or lost) dynamically. When a talent is applied to an object, no other instance of the object’s class are affected. Talents may be composed of other talents, however, as with traits, the composition order is irrelevant. Conflicts must be explicitly resolved.
->  
->  Like traits, talents can be flattened, either by incorporating the talent into an existing class, or by introducing a new class with the new methods. However, flattening is purely static and results in the loss of the dynamic description of the talent on the object. Flattening is not mandatory, on the contrary, it is just a convenience feature which shows how traits are a subset of talents.
-</script></section><section  data-markdown><script type="text/template">
+> … object-specific units of reuse which model features that an object
+> can acquire **at run-time**.
+</script></section><section data-markdown><script type="text/template">
+### Talents vs. Traits
+
+> **Like a trait**, a talent represents a set of methods that constitute part of
+> the behavior of an object.
+
+> **Unlike traits**, talents can be acquired (or lost) dynamically.
+> When a talent is applied to an object, no other instance of the object’s
+> class are affected.
+</script></section><section data-markdown><script type="text/template">
+### Composition of Talents
+
+> Talents may be composed of other talents, however, as with traits,
+> the composition **order** is irrelevant.
+> **Conflicts** must be explicitly resolved.
+</script></section><section data-markdown><script type="text/template">
+### Composition: Talents vs. Traits
+
+> Like traits, **talents can be flattened**, either by incorporating the talent
+> into an existing class, or by introducing a new class with the new methods.
+> However, flattening is purely static and results in the **loss of the dynamic**
+> description of the talent on the object. Flattening is not mandatory, on the
+> contrary, it is just a convenience feature which shows how **traits are a
+> subset of talents**.
+</script></section></section><section  data-markdown><script type="text/template">
 ## Composition in Angular
 
 ### Directive
@@ -300,6 +346,7 @@ Your code is inspiring
 ### Decorator? Eigentlich TypeScript bzw. JavaScript
 [Use decorator to beat ngOnChanges – Decoupling ngOnChanges | Kern Zhao](https://www.youtube.com/watch?v=rVDMmlCRvkg&ab_channel=ng-conf)
 [Example](https://stackblitz.com/github/zhaosiyang/property-watch-decorator-example?file=src%2Fapp%2Fchild%2Fchild.component.ts)
+Decorators may not change the type of the
 
 ### Composable Components (smart vs. dumb)
 [Article](https://medium.com/@jtomaszewski/how-to-write-good-composable-and-pure-components-in-angular-2-1756945c0f5b)
@@ -376,6 +423,23 @@ Entwicklung von Bibliotheken:
 - Java Stream API
 - C++ Ranges
 - RxJS pipe
+
+docker-compose: compose services (i.e. Docker container)
+
+Functional Programming/Composition ist nicht der heilige Graal
+- memory management
+- performance (immutable data, call stacks, etc.)
+aber OOP erfordert mehr Disziplin und Vorausdenken
+
+  
+> [...] avoid code reuse in favor of behaviour reuse
+> Code reuse leads to an increase of dependency between classes,
+> resulting in architectures, which components are tightly coupled.
+
+https://dev.to/riccardo_cardin/template-method-pattern-revised-3od3
+http://blog.rcard.in/programming/oop/software-engineering/2017/04/10/dependency-dot.html
+
+![Inheritance, you used. Composition, you should](https://res.cloudinary.com/practicaldev/image/fetch/s--_epCn2z3--/c_limit%2Cf_auto%2Cfl_progressive%2Cq_auto%2Cw_880/https://i.imgflip.com/27j94u.jpg)
 </script></section></div>
     </div>
 
