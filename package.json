@@ -18,6 +18,7 @@
     "start": "reveal-md src/presentation.md",
     "watch": "cd src && reveal-md presentation.md -w",
     "watch-functional-composition": "cd src && reveal-md functional-composition.md -w",
+    "watch-age-of-programming": "cd src && reveal-md age-of-programming.md -w --css style/age-of-programming.css --scripts scripts/age-of-programming.js",
     "watch-declarative-ui": "cd src && reveal-md declarative-ui.md -w"
   },
   "author": "Michael Maier",
